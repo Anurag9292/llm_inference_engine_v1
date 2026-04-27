@@ -106,6 +106,7 @@ cat > /etc/grafana/provisioning/datasources/datasource.yml <<EOF
 apiVersion: 1
 datasources:
   - name: Prometheus
+    uid: prometheus
     type: prometheus
     access: proxy
     url: http://localhost:${PROMETHEUS_PORT}
