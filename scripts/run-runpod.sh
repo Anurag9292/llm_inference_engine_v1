@@ -49,8 +49,8 @@ if python3 -c "import vllm" 2>/dev/null; then
     VLLM_VER=$(python3 -c "import vllm; print(vllm.__version__)" 2>/dev/null)
     echo -e "${GREEN}OK${NC} - vLLM ${VLLM_VER} already installed"
 else
-    echo -e "${YELLOW}Installing...${NC}"
-    pip install vllm --quiet 2>&1 | tail -1
+    echo -e "${YELLOW}Installing (this may take a few minutes)...${NC}"
+    pip install vllm --quiet 2>/dev/null || pip install vllm
     VLLM_VER=$(python3 -c "import vllm; print(vllm.__version__)" 2>/dev/null)
     echo -e "${GREEN}OK${NC} - vLLM ${VLLM_VER} installed"
 fi
