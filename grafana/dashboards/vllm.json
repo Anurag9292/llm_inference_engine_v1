@@ -1,4 +1,14 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
   "annotations": {
     "list": []
   },
@@ -15,7 +25,7 @@
       "type": "row"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": { "type": "prometheus" },
       "fieldConfig": {
         "defaults": {
           "thresholds": {
@@ -44,14 +54,14 @@
       "type": "stat",
       "targets": [
         {
-          "expr": "vllm:num_requests_running",
+          "expr": "sum(vllm:num_requests_running)",
           "legendFormat": "Running",
           "refId": "A"
         }
       ]
     },
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": { "type": "prometheus" },
       "fieldConfig": {
         "defaults": {
           "thresholds": {
@@ -80,14 +90,14 @@
       "type": "stat",
       "targets": [
         {
-          "expr": "vllm:num_requests_waiting",
+          "expr": "sum(vllm:num_requests_waiting)",
           "legendFormat": "Waiting",
           "refId": "A"
         }
       ]
     },
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": { "type": "prometheus" },
       "fieldConfig": {
         "defaults": {
           "thresholds": {
@@ -118,14 +128,14 @@
       "type": "stat",
       "targets": [
         {
-          "expr": "vllm:gpu_cache_usage_perc",
+          "expr": "sum(vllm:gpu_cache_usage_perc)",
           "legendFormat": "KV Cache %",
           "refId": "A"
         }
       ]
     },
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": { "type": "prometheus" },
       "fieldConfig": {
         "defaults": {
           "thresholds": {
@@ -156,7 +166,7 @@
       "type": "stat",
       "targets": [
         {
-          "expr": "vllm:cpu_prefix_cache_hit_rate",
+          "expr": "sum(vllm:gpu_prefix_cache_hit_rate) or sum(vllm:cpu_prefix_cache_hit_rate) or vector(0)",
           "legendFormat": "Hit Rate",
           "refId": "A"
         }
@@ -170,7 +180,7 @@
       "type": "row"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": { "type": "prometheus" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -198,24 +208,24 @@
       "type": "timeseries",
       "targets": [
         {
-          "expr": "histogram_quantile(0.50, sum(rate(vllm:e2e_request_latency_seconds_bucket[5m])) by (le))",
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(vllm:e2e_request_latency_seconds_bucket[5m])))",
           "legendFormat": "p50",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.90, sum(rate(vllm:e2e_request_latency_seconds_bucket[5m])) by (le))",
+          "expr": "histogram_quantile(0.90, sum by (le) (rate(vllm:e2e_request_latency_seconds_bucket[5m])))",
           "legendFormat": "p90",
           "refId": "B"
         },
         {
-          "expr": "histogram_quantile(0.99, sum(rate(vllm:e2e_request_latency_seconds_bucket[5m])) by (le))",
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(vllm:e2e_request_latency_seconds_bucket[5m])))",
           "legendFormat": "p99",
           "refId": "C"
         }
       ]
     },
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": { "type": "prometheus" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -243,24 +253,24 @@
       "type": "timeseries",
       "targets": [
         {
-          "expr": "histogram_quantile(0.50, sum(rate(vllm:time_to_first_token_seconds_bucket[5m])) by (le))",
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(vllm:time_to_first_token_seconds_bucket[5m])))",
           "legendFormat": "p50",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.90, sum(rate(vllm:time_to_first_token_seconds_bucket[5m])) by (le))",
+          "expr": "histogram_quantile(0.90, sum by (le) (rate(vllm:time_to_first_token_seconds_bucket[5m])))",
           "legendFormat": "p90",
           "refId": "B"
         },
         {
-          "expr": "histogram_quantile(0.99, sum(rate(vllm:time_to_first_token_seconds_bucket[5m])) by (le))",
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(vllm:time_to_first_token_seconds_bucket[5m])))",
           "legendFormat": "p99",
           "refId": "C"
         }
       ]
     },
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": { "type": "prometheus" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -288,24 +298,24 @@
       "type": "timeseries",
       "targets": [
         {
-          "expr": "histogram_quantile(0.50, sum(rate(vllm:time_per_output_token_seconds_bucket[5m])) by (le))",
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(vllm:time_per_output_token_seconds_bucket[5m])))",
           "legendFormat": "p50",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.90, sum(rate(vllm:time_per_output_token_seconds_bucket[5m])) by (le))",
+          "expr": "histogram_quantile(0.90, sum by (le) (rate(vllm:time_per_output_token_seconds_bucket[5m])))",
           "legendFormat": "p90",
           "refId": "B"
         },
         {
-          "expr": "histogram_quantile(0.99, sum(rate(vllm:time_per_output_token_seconds_bucket[5m])) by (le))",
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(vllm:time_per_output_token_seconds_bucket[5m])))",
           "legendFormat": "p99",
           "refId": "C"
         }
       ]
     },
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": { "type": "prometheus" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -333,7 +343,7 @@
       "type": "timeseries",
       "targets": [
         {
-          "expr": "rate(vllm:request_success_total[5m])",
+          "expr": "sum(rate(vllm:request_success_total[5m]))",
           "legendFormat": "Successful req/s",
           "refId": "A"
         }
@@ -347,7 +357,7 @@
       "type": "row"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": { "type": "prometheus" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -375,19 +385,19 @@
       "type": "timeseries",
       "targets": [
         {
-          "expr": "rate(vllm:prompt_tokens_total[5m])",
+          "expr": "sum(rate(vllm:prompt_tokens_total[5m]))",
           "legendFormat": "Prompt tokens/s",
           "refId": "A"
         },
         {
-          "expr": "rate(vllm:generation_tokens_total[5m])",
+          "expr": "sum(rate(vllm:generation_tokens_total[5m]))",
           "legendFormat": "Generation tokens/s",
           "refId": "B"
         }
       ]
     },
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": { "type": "prometheus" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -415,12 +425,12 @@
       "type": "timeseries",
       "targets": [
         {
-          "expr": "vllm:num_requests_running",
+          "expr": "sum(vllm:num_requests_running)",
           "legendFormat": "Running",
           "refId": "A"
         },
         {
-          "expr": "vllm:num_requests_waiting",
+          "expr": "sum(vllm:num_requests_waiting)",
           "legendFormat": "Waiting",
           "refId": "B"
         }
@@ -434,7 +444,7 @@
       "type": "row"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": { "type": "prometheus" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -464,19 +474,19 @@
       "type": "timeseries",
       "targets": [
         {
-          "expr": "vllm:gpu_cache_usage_perc",
+          "expr": "sum(vllm:gpu_cache_usage_perc)",
           "legendFormat": "GPU KV Cache %",
           "refId": "A"
         },
         {
-          "expr": "vllm:cpu_cache_usage_perc",
+          "expr": "sum(vllm:cpu_cache_usage_perc)",
           "legendFormat": "CPU KV Cache %",
           "refId": "B"
         }
       ]
     },
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": { "type": "prometheus" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -506,13 +516,13 @@
       "type": "timeseries",
       "targets": [
         {
-          "expr": "vllm:cpu_prefix_cache_hit_rate",
-          "legendFormat": "CPU Prefix Hit Rate",
+          "expr": "sum(vllm:gpu_prefix_cache_hit_rate)",
+          "legendFormat": "GPU Prefix Hit Rate",
           "refId": "A"
         },
         {
-          "expr": "vllm:gpu_prefix_cache_hit_rate",
-          "legendFormat": "GPU Prefix Hit Rate",
+          "expr": "sum(vllm:cpu_prefix_cache_hit_rate)",
+          "legendFormat": "CPU Prefix Hit Rate",
           "refId": "B"
         }
       ]
@@ -526,5 +536,5 @@
   "timezone": "browser",
   "title": "vLLM Inference Dashboard",
   "uid": "vllm-dashboard",
-  "version": 1
+  "version": 2
 }
